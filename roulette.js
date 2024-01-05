@@ -2,12 +2,23 @@ class RouletteBetting {
     constructor() {
         this.bets = [];
         this.houseProfit = 0;
+        this.redNumbers = [1, 3, 5, 7, 9, 12];
+        this.blackNumbers = [2, 4, 6, 8, 10, 11];
     }
 
-    placeBet(name, numbers, betAmount) {
-        numbers = numbers.split(',').map(num => parseInt(num, 10));
-        betAmount = parseInt(betAmount, 10);
-        this.bets.push({ name, numbers, betAmount });
+    placeBet(name, color, betAmount) {
+        let numbers;
+
+        if (color.toLowerCase() === 'red') {
+            numbers = this.redNumbers;
+        } else if (color.toLowerCase() === 'black') {
+            numbers = this.blackNumbers;
+        } else {
+            console.log("Invalid color input. Please enter 'red' or 'black'.");
+            return;
+        }
+        const bet = { name, numbers, betAmount };
+        this.bets.push(bet);
         this.updateCurrentBetsDisplay();
     }
 
