@@ -6,17 +6,25 @@ class RouletteBetting {
         this.blackNumbers = [2, 4, 6, 8, 10, 11];
     }
 
-    placeBet(name, color, betAmount) {
+    placeBet(name, input, betAmount) {
         let numbers;
 
-        if (color.toLowerCase() === 'red') {
-            numbers = this.redNumbers;
-        } else if (color.toLowerCase() === 'black') {
-            numbers = this.blackNumbers;
+        if (isNaN(input)) {
+            // Input is a color
+            if (input.toLowerCase() === 'red') {
+                numbers = this.redNumbers;
+            } else if (input.toLowerCase() === 'black') {
+                numbers = this.blackNumbers;
+            } else {
+                console.log("Invalid input. Please enter a valid color ('red' or 'black') or a number.");
+                return;
+            }
         } else {
-            console.log("Invalid color input. Please enter 'red' or 'black'.");
-            return;
+            // Input is a number
+            const num = parseInt(input, 10);
+            numbers = [num];
         }
+
         const bet = { name, numbers, betAmount };
         this.bets.push(bet);
         this.updateCurrentBetsDisplay();
@@ -84,8 +92,8 @@ const roulette = new RouletteBetting();
 
 function placeBet() {
     const betInputValue = document.getElementById('betInput').value;
-    const [name, numbers, betAmount] = betInputValue.split(' ');
-    roulette.placeBet(name, numbers, betAmount);
+    const [name, input, betAmount] = betInputValue.split(' ');
+    roulette.placeBet(name, input, betAmount);
     document.getElementById('betInput').value = ''; // Clear input field
 }
 
