@@ -31,31 +31,33 @@ class RouletteBetting {
     }
 
     calculateWinnings(winningNumber) {
-        winningNumber = parseInt(winningNumber, 10);
+    winningNumber = parseInt(winningNumber, 10);
 
-        // Adjust for the method that returns 37 instead of 0
-        if (winningNumber === 37) {
-            winningNumber = 0;
+    // Adjust for the method that returns 37 instead of 0
+    if (winningNumber === 37) {
+        winningNumber = 0;
+    }
+
+    let totalPayout = 0;
+    const winners = [];
+
+    this.bets.forEach(bet => {
+        const { name, numbers, betAmount } = bet;
+        if (numbers.includes(winningNumber)) {
+            const payoutRatio = this.getPayoutRatio(numbers.length);
+            const winnings = betAmount * payoutRatio; // Exclude original bet
+            winners.push({ name, winnings });
+            totalPayout += winnings;
         }
+    });
 
-        let totalPayout = 0;
-        const winners = [];
+    this.houseProfit += totalPayout;
+    this.bets = []; // Clear current bets
+    this.updateWinningBetsDisplay(winners);
+    this.updateHouseProfitDisplay();
+    this.updateCurrentBetsDisplay(); // Clear display of current bets
+}
 
-        this.bets.forEach(bet => {
-            const { name, numbers, betAmount } = bet;
-            if (numbers.includes(winningNumber)) {
-                const payoutRatio = this.getPayoutRatio(numbers.length);
-                const winnings = betAmount * payoutRatio + betAmount; // Include original bet
-                winners.push({ name, winnings });
-                totalPayout += winnings;
-            }
-        });
-
-        this.houseProfit += (this.totalBetAmount() - totalPayout);
-        this.bets = []; // Clear current bets
-        this.updateWinningBetsDisplay(winners);
-        this.updateHouseProfitDisplay();
-        this.updateCurrentBetsDisplay(); // Clear display of current bets
     }
 
     getPayoutRatio(numNumbers) {
